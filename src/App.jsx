@@ -18,7 +18,7 @@ function App() {
     let controlPosition = 0;
     for(let j = 0; j < wordSize; j++){
       let startingPosition = randomPosition - controlPosition;
-      if(gameArray[startingPosition] === undefined || gameArray[startingPosition] === word[j]){
+      if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
         controlPosition = controlPosition + rows;
       }
       else{
@@ -46,13 +46,12 @@ function App() {
     let controlPosition = 0;
     for(let j = 0; j < wordSize; j++){
       let startingPosition = randomPosition + controlPosition;
-      if(gameArray[startingPosition] === undefined || gameArray[startingPosition] === word[j]){
+      if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
         controlPosition = controlPosition + rows;
       }
       else{
         return false;
       }
-      console.log(startingPosition);
     }
     return true;
   }
@@ -77,7 +76,7 @@ function App() {
     let controlPosition = 0
     for(let j = 0; j < wordLength; j++){
       let startingPosition = position - controlPosition;
-      if(gameArray[startingPosition] === undefined || gameArray[startingPosition] === word[j]){
+      if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
         controlPosition = controlPosition - 1;
       }
       else{
@@ -93,7 +92,7 @@ function App() {
     let rowBreak = Math.trunc(position / columns);
     let isAvailable;
 
-    if(availableSpace > 0 && rowBreak === Math.trunc(availableSpace)){
+    if(availableSpace > 0 && rowBreak === Math.trunc(availableSpace / columns)){
       isAvailable = checkSpacePositionLeft(position, word, wordLength, gameArray);
       return isAvailable;
     }
@@ -106,7 +105,7 @@ function App() {
     let controlPosition = 0
     for(let j = 0; j < wordLength; j++){
       let startingPosition = position - controlPosition;
-      if(gameArray[startingPosition] === undefined || gameArray[startingPosition] === word[j]){
+      if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
         controlPosition = controlPosition + 1;
       }
       else{
@@ -122,7 +121,7 @@ function App() {
     let rowBreak = Math.trunc(position / columns);
     let isAvailable;
 
-    if(availableSpace < arrayLength && rowBreak === Math.trunc(availableSpace)){
+    if(availableSpace < arrayLength && rowBreak === Math.trunc(availableSpace / columns)){
       isAvailable = checkSpacePositionRight(position, word, wordLength, gameArray);
       return isAvailable;
     }
@@ -138,7 +137,7 @@ function App() {
     for(let j = 0; j < wordSize; j++){
       let startingPosition = randomPosition + controlPosition;
       gameArray[startingPosition] = string[j];
-      controlPosition = controlPosition + rows;
+      controlPosition = controlPosition - rows;
     }
   }
 
@@ -155,61 +154,102 @@ function App() {
     let controlPosition = 0
     for(let j = 0; j < wordSize; j++){
       let startingPosition = randomPosition - controlPosition;
-      gameArray[startingPosition] === string[j];
-      controlPosition = controlPosition - 1;
+      gameArray[startingPosition] = string[j];
+      controlPosition = controlPosition + 1;
     }
   }
 
   function fillRight(randomPosition, gameArray, string, wordSize){
     let controlPosition = 0
     for(let j = 0; j < wordSize; j++){
-      let startingPosition = randomPosition - controlPosition;
-      gameArray[startingPosition] === string[j];
+      let startingPosition = randomPosition + controlPosition;
+      gameArray[startingPosition] = string[j];
       controlPosition = controlPosition + 1;
     }
   }
 
   const createGameArray = (words) => {
     const gameArray = new Array(size);
+    gameArray.fill('0');
 
-    for(let i = 0; i < words.length; i++){
+    let i = 0;
+
+    while(i < words.length){
       let string = words[i];
       let wordSize = string.length;
 
       let randomPosition = Math.floor(Math.random() * size);
+      if(!(gameArray[randomPosition] === string[0] || gameArray[randomPosition] === '0' )){
+        continue;
+      }
 
       let positionUp = checkSpaceUp(randomPosition, rows, wordSize, gameArray, string);
 
+      console.log("Checkeo si se puede hacia arriba: ", string, "desde la posición: ",randomPosition, positionUp);
+
       if(positionUp){
         fillUp(randomPosition, gameArray, string, rows, wordSize);
+        i++;
+        continue;
       }
+      let positionDown = checkSpaceDown(randomPosition, rows, wordSize, gameArray.length, gameArray, string);
 
-      let positionDown = checkSpaceDown(randomPosition, rows, wordSize, gameArray, string);
+      console.log("Checkeo si se puede hacia abajo: ", string, "desde la posición: ",randomPosition, positionDown);
 
       if(positionDown){
         fillDown(randomPosition, gameArray, string, rows, wordSize);
+        i++;
+        continue;
       }
 
       let positionLeft = checkSpaceLeft(randomPosition, columns, wordSize, string, gameArray);
 
+      console.log("Checkeo si se puede hacia la izquierda: ", string, "desde la posición: ",randomPosition, positionLeft);
+
       if(positionLeft){
         fillLeft(randomPosition, gameArray, string, wordSize);
+        i++;
+        continue;
       }
 
-      let positionRight = checkSpaceRight(randomPosition, columns, wordSize, string, gameArray);
+      let positionRight = checkSpaceRight(randomPosition, columns, wordSize, gameArray.length, string, gameArray);
+
+      console.log("Checkeo si se puede hacia la derecha: ", string, "desde la posición: ",randomPosition, positionRight);
 
       if(positionRight){
         fillRight(randomPosition, gameArray, string, wordSize);
+        i++;
+        continue;
       }
-      console.log(gameArray);
     }
+    console.log(gameArray);
+    return gameArray;
   }
 
-  createGameArray(words);
+  let gameArray = createGameArray(words);
+
+  const chunkArray = (array, chunkSize) => {
+    const numberOfChunks = Math.ceil(array.length / chunkSize);
+  
+    return [...Array(numberOfChunks)]
+      .map((value, index) => {
+        return array.slice(index * chunkSize, (index + 1) * chunkSize);
+      })
+  }
+
+  let gameArrayChunks = chunkArray(gameArray, columns);
+
+  console.log(gameArrayChunks);
 
   return (
-    <div className='container'>
-      
+    <div className="container">
+      {gameArrayChunks.map((row, rowIndex) => (
+        <div className="row" key={rowIndex}>
+          {row.map((value, index) => (
+            <WordSearchBlock value={value} key={index} />
+          ))}
+        </div>
+      ))}
     </div>
   )
 }

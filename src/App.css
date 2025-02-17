@@ -9,8 +9,15 @@
   justify-content: center;
 }
 
+.row{
+  display: flex;
+}
+
 .block{
   border: 2px solid white;
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
   width: 30px;
   height: 30px;
 }

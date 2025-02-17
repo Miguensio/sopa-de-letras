@@ -1,7 +1,7 @@
-const WordSearchBlock = () => {
+const WordSearchBlock = ({ value }) => {
     return (
         <div className="block">
-            X
+            {value}
         </div>
     );
 }
