@@ -2,8 +2,13 @@
   background-color: rgb(35, 35, 35);
 }
 
-.container{
+.game-container{
   display: flex;
+  min-width: max-content;
+  width: 80%;
+  margin: auto;
   flex-direction: column;
   justify-content: center;
+  border: 2px solid white;
+  padding: 20px 0;
 }

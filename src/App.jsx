@@ -4,7 +4,7 @@ import WordSearchGrid from './components/Word-search-grid';
 function App() {
 
   return (
-    <div className="container">
+    <div className="game-container">
       <WordSearchGrid />
     </div>
   )

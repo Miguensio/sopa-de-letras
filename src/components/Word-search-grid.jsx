@@ -449,15 +449,24 @@ const WordSearchGrid = () => {
   console.log(gameArrayChunks);
 
   return (
-    <div className="word-search-grid-container">
-      {gameArrayChunks.map((row, rowIndex) => (
-        <div className="row" key={rowIndex}>
-          {row.map((value, index) => (
-            <WordSearchBlock value={value} key={index} />
+    <>
+      <div className="word-search-grid-container">
+        {gameArrayChunks.map((row, rowIndex) => (
+          <div className="row" key={rowIndex}>
+            {row.map((value, index) => (
+              <WordSearchBlock value={value} key={index} />
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className='words-container'>
+        <div className='words'>
+          {words.map((word) => (
+            <p>- {word}</p>
           ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </>
   );
 
 }
