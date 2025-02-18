@@ -8,12 +8,12 @@ function App() {
   //wordLimit stores how much space the word is going to occupy
   //availableSpace stores the positions it would travel in the array to create the full word
 
-  function checkSpacePositionUp(randomPosition, gameArray, word, rows, wordSize){
+  function checkSpacePositionUp(randomPosition, gameArray, word, columns, wordSize){
     let controlPosition = 0;
     for(let j = 0; j < wordSize; j++){
       let startingPosition = randomPosition - controlPosition;
       if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
-        controlPosition = controlPosition + rows;
+        controlPosition = controlPosition + columns;
       }
       else{
         return false;
@@ -22,13 +22,13 @@ function App() {
     return true;
   }
 
-  function checkSpaceUp(position, rows, wordLength, gameArray, word){
-    let wordLimit = (wordLength - 1) * rows;
+  function checkSpaceUp(position, columns, wordLength, gameArray, word){
+    let wordLimit = (wordLength - 1) * columns;
     let availableSpace = position - wordLimit;
     let isAvailable;
 
     if(availableSpace > 0){
-      isAvailable = checkSpacePositionUp(position, gameArray, word, rows, wordLength);
+      isAvailable = checkSpacePositionUp(position, gameArray, word, columns, wordLength);
       return isAvailable;
     }
     else{
@@ -36,12 +36,12 @@ function App() {
     }
   }
 
-  function checkSpacePositionDown(randomPosition, gameArray, word, rows, wordSize){
+  function checkSpacePositionDown(randomPosition, gameArray, word, columns, wordSize){
     let controlPosition = 0;
     for(let j = 0; j < wordSize; j++){
       let startingPosition = randomPosition + controlPosition;
       if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
-        controlPosition = controlPosition + rows;
+        controlPosition = controlPosition + columns;
       }
       else{
         return false;
@@ -50,13 +50,13 @@ function App() {
     return true;
   }
 
-  function checkSpaceDown(position, rows, wordLength, arrayLength, gameArray, word){
-    let wordLimit = (wordLength - 1) * rows;
+  function checkSpaceDown(position, columns, wordLength, arrayLength, gameArray, word){
+    let wordLimit = (wordLength - 1) * columns;
     let availableSpace = position + wordLimit;
     let isAvailable;
 
     if(availableSpace < arrayLength){
-      isAvailable = checkSpacePositionDown(position, gameArray, word, rows, wordLength);
+      isAvailable = checkSpacePositionDown(position, gameArray, word, columns, wordLength);
       return isAvailable;
     }
     else{
@@ -192,6 +192,68 @@ function App() {
     }
   }
 
+  function checkSpacePositionUpLeft(position, columns, wordLength, word, gameArray){
+    let controlPosition = 0;
+    for(let j = 0; j < wordLength; j++){
+      let startingPosition = position - controlPosition;
+      if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
+        controlPosition = controlPosition + columns + 1;
+      }
+      else{
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function checkSpaceUpLeft(position, rows, columns, wordLength, word, gameArray){
+    let wordLimit = ((wordLength - 1) * rows) - (wordLength - 1);
+    let availableSpace = position - wordLimit;
+    let wordLimitLeft = wordLength - 1;
+    let availableSpaceLeft = position - wordLimitLeft;
+    let rowBreak = Math.trunc(position / columns);
+    let isAvailable;
+
+    if(availableSpace > 0 && rowBreak === Math.trunc(availableSpaceLeft / columns)){
+      isAvailable = checkSpacePositionUpLeft(position, columns, wordLength, word, gameArray);
+      return isAvailable;
+    }
+    else{
+      return false;
+    }
+  }
+
+  function checkSpacePositionUpRight(position, columns, wordLength, word, gameArray){
+    let controlPosition = 0;
+    for(let j = 0; j < wordLength; j++){
+      let startingPosition = position - controlPosition;
+      if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
+        controlPosition = controlPosition + columns - 1;
+      }
+      else{
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function checkSpaceUpRight(position, rows, columns, wordLength, word, gameArray){
+    let wordLimit = ((wordLength - 1) * rows) + (wordLength - 1);
+    let availableSpace = position - wordLimit;
+    let wordLimitRight = wordLength - 1;
+    let availableSpaceRight = position + wordLimitRight;
+    let rowBreak = Math.trunc(position / columns);
+    let isAvailable;
+
+    if(availableSpace > 0 && rowBreak === Math.trunc(availableSpaceRight / columns)){
+      isAvailable = checkSpacePositionUpRight(position, columns, wordLength, word, gameArray);
+      return isAvailable;
+    }
+    else{
+      return false;
+    }
+  }
+
   //Functions to fill the array in 4 directions
 
   function fillUp(randomPosition, gameArray, string, rows, wordSize){
@@ -257,9 +319,18 @@ function App() {
     }
   }
 
+  function fillUpRight(randomPosition, columns, wordLength, word, gameArray){
+    let controlPosition = 0;
+    for(let j = 0; j < wordLength; j++){
+      let startingPosition = randomPosition - controlPosition;
+      gameArray[startingPosition] = word[j];
+      controlPosition = controlPosition + columns - 1;
+    }
+  }
+
   //const words = ["HOLA","POLOLA","PROBANDO","TAL","COMPA","PARALO"];
-  const words = ["HOLA","POLOLA","PROBANDO"];
-  const [rows, columns] = [10, 10];
+  const words = ["HOLA","CONSOLA","DIAGONAL","POLOLA","PROBA","COLA","TROLA","DALE","COMPA","DROGA"];
+  const [rows, columns] = [12,15];
   const size = rows * columns;
 
   console.log(size);
@@ -278,22 +349,22 @@ function App() {
       if(!(gameArray[randomPosition] === string[0] || gameArray[randomPosition] === '0' )){
         continue;
       }
-      /*
-      let positionUp = checkSpaceUp(randomPosition, rows, wordSize, gameArray, string);
+      
+      let positionUp = checkSpaceUp(randomPosition, columns, wordSize, gameArray, string);
 
       console.log("Checkeo si se puede hacia arriba: ", string, "desde la posición: ",randomPosition, positionUp);
 
       if(positionUp){
-        fillUp(randomPosition, gameArray, string, rows, wordSize);
+        fillUp(randomPosition, gameArray, string, columns, wordSize);
         i++;
         continue;
       }
-      let positionDown = checkSpaceDown(randomPosition, rows, wordSize, gameArray.length, gameArray, string);
+      let positionDown = checkSpaceDown(randomPosition, columns, wordSize, gameArray.length, gameArray, string);
 
       console.log("Checkeo si se puede hacia abajo: ", string, "desde la posición: ",randomPosition, positionDown);
 
       if(positionDown){
-        fillDown(randomPosition, gameArray, string, rows, wordSize);
+        fillDown(randomPosition, gameArray, string, columns, wordSize);
         i++;
         continue;
       }
@@ -317,7 +388,6 @@ function App() {
         i++;
         continue;
       }
-      
 
       let positionDownRight = checkSpaceDownRight(randomPosition, rows, columns, wordSize, gameArray.length, string, gameArray);
 
@@ -328,7 +398,6 @@ function App() {
         i++;
         continue;
       }
-        */
   
       let positionDownLeft = checkSpaceDownLeft(randomPosition, rows, columns, wordSize, gameArray.length, string, gameArray);
 
@@ -336,6 +405,26 @@ function App() {
 
       if(positionDownLeft){
         fillDownLeft(randomPosition, columns, wordSize, string, gameArray);
+        i++;
+        continue;
+      }
+
+      let positionUpLeft = checkSpaceUpLeft(randomPosition, rows, columns, wordSize, string, gameArray);
+
+      console.log("Checkeo si se puede hacia arriba-izquierda: ", string, "desde la posición: ",randomPosition, positionUpLeft);
+
+      if(positionUpLeft){
+        fillUpLeft(randomPosition, columns, wordSize, string, gameArray);
+        i++;
+        continue;
+      }
+
+      let positionUpRight = checkSpaceUpRight(randomPosition, rows, columns, wordSize, string, gameArray);
+
+      console.log("Checkeo si se puede hacia arriba-derecha: ", string, "desde la posición: ",randomPosition, positionUpRight);
+
+      if(positionUpRight){
+        fillUpRight(randomPosition, columns, wordSize, string, gameArray);
         i++;
         continue;
       }
