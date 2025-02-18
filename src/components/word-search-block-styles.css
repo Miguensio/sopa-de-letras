@@ -2,10 +2,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    outline: 2px solid rgb(209, 209, 209);
     color: white;
     font-size: 1.8rem;
     text-align: center;
     width: 50px;
     height: 50px;
+}
+
+.no-selected{
+    border: none;
+}
+
+.selected{
+    outline: 2px solid rgb(60, 255, 0);
+    z-index: 200;
 }

@@ -461,8 +461,8 @@ const WordSearchGrid = () => {
       </div>
       <div className='words-container'>
         <div className='words'>
-          {words.map((word) => (
-            <p>- {word}</p>
+          {words.map((word, index) => (
+            <p key={index}>- {word}</p>
           ))}
         </div>
       </div>
