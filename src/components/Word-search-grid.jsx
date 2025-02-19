@@ -1,7 +1,14 @@
+import { useRef } from 'react';
 import WordSearchBlock from './word-search-block';
 import './word-search-grid-styles.css';
 
 const WordSearchGrid = () => {
+
+  let itemSelected = false;
+  let firstClickedIndex;
+  let clickedIndexes = [];
+  let direction = '';
+
   //Functions that check if it's possible to fill the array in different directions with the letters of a word
 
   //wordLimit stores how much space the word is going to occupy
@@ -448,13 +455,83 @@ const WordSearchGrid = () => {
 
   console.log(gameArrayChunks);
 
+  const handleSelection = (propState, setPropState, index) => {
+    //If no item is selected yet the prop state is changed and the index is saved
+    //If there's an item selected then a direction needs to be decided based on the next element the user selects
+    if(!itemSelected){
+      if(propState === "no-selected"){
+        setPropState("selected");
+        itemSelected = true;
+        firstClickedIndex = index;
+        clickedIndexes.push(index);
+      }
+    }
+    else{
+      if(direction === ''){
+        if(firstClickedIndex - index === -1){
+          direction = 'right';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+        else if(firstClickedIndex - index === 1){
+          direction = 'left';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+        else if(firstClickedIndex - index === columns * -1){
+          direction = 'down';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+        else if(firstClickedIndex - index === columns){
+          direction = 'up';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+        else if(firstClickedIndex - index === (columns + 1) * -1){
+          direction = 'down-right';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+        else if(firstClickedIndex - index === columns + 1){
+          direction = 'up-left';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+        else if(firstClickedIndex - index === columns - 1){
+          direction = 'up-right';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+        else if(firstClickedIndex - index === (columns - 1) * -1){
+          direction = 'down-left';
+          setPropState('selected');
+          clickedIndexes.push(index);
+        }
+      }
+      else if(direction === 'right'){
+        if(clickedIndexes[0] - 1 === index || clickedIndexes[clickedIndexes.length - 1] + 1 === index){
+          
+        }
+      }
+    }
+    console.log(clickedIndexes);
+    console.log(itemSelected);
+    console.log(index);
+    console.log(direction);
+  }
+
   return (
     <>
       <div className="word-search-grid-container">
         {gameArrayChunks.map((row, rowIndex) => (
           <div className="row" key={rowIndex}>
             {row.map((value, index) => (
-              <WordSearchBlock value={value} key={index} />
+              <WordSearchBlock 
+              value={value}
+              indexPos={rowIndex * gameArrayChunks[0].length + index}
+              handleItemSelected={handleSelection}
+              key={rowIndex * gameArrayChunks[0].length + index} />
             ))}
           </div>
         ))}
