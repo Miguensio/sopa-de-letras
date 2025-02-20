@@ -1,12 +1,14 @@
 import { useRef } from 'react';
 import WordSearchBlock from './word-search-block';
 import './word-search-grid-styles.css';
+import WordToSearch from './Word-to-search';
 
 const WordSearchGrid = () => {
 
   let itemSelected = false;
   let firstClickedIndex;
   let clickedIndexes = [];
+  let selectedLetters = [];
   let direction = '';
   let rowBreak;
 
@@ -443,13 +445,15 @@ const WordSearchGrid = () => {
       })
   }
 
-  const deselectBlock = (clickedIndexes, index, setPropState) => {
+  const deselectBlock = (clickedIndexes, index, setPropState, selectedLetters) => {
     if(clickedIndexes[0] === index){
       clickedIndexes.shift();
+      selectedLetters.shift();
       setPropState('no-selected');
     }
     else if(clickedIndexes[clickedIndexes.length - 1] === index){
       clickedIndexes.pop();
+      selectedLetters.pop();
       setPropState('no-selected');
     }
   }
@@ -467,7 +471,7 @@ const WordSearchGrid = () => {
 
   console.log(gameArrayChunks);
 
-  const handleSelection = (propState, setPropState, index) => {
+  const handleSelection = (propState, setPropState, index, letter) => {
     //If no item is selected yet the prop state is changed and the index is saved
     //If there's an item selected then a direction needs to be decided based on the next element the user selects
     if(!itemSelected){
@@ -476,6 +480,7 @@ const WordSearchGrid = () => {
         itemSelected = true;
         firstClickedIndex = index;
         clickedIndexes.push(index);
+        selectedLetters.push(letter);
       }
     }
     else{
@@ -487,46 +492,55 @@ const WordSearchGrid = () => {
           setPropState('selected');
           rowBreak = Math.trunc(index / columns);
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
         }
         else if(firstClickedIndex - index === 1){
           direction = 'left';
           setPropState('selected');
           rowBreak = Math.trunc(index / columns);
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
         }
         else if(firstClickedIndex - index === columns * -1){
           direction = 'down';
           setPropState('selected');
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
         }
         else if(firstClickedIndex - index === columns){
           direction = 'up';
           setPropState('selected');
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
         }
         else if(firstClickedIndex - index === (columns + 1) * -1){
           direction = 'down-right';
           setPropState('selected');
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
         }
         else if(firstClickedIndex - index === columns + 1){
           direction = 'up-left';
           setPropState('selected');
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
         }
         else if(firstClickedIndex - index === columns - 1){
           direction = 'up-right';
           setPropState('selected');
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
         }
         else if(firstClickedIndex - index === (columns - 1) * -1){
           direction = 'down-left';
           setPropState('selected');
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
         }
         else if(firstClickedIndex === index){
           setPropState('no-selected');
           clickedIndexes.pop();
+          selectedLetters.pop();
           itemSelected = false;
         }
         else{
@@ -537,14 +551,16 @@ const WordSearchGrid = () => {
       else if(direction === 'right' || direction === 'left'){
         if(clickedIndexes[clickedIndexes.length - 1] + 1 === index && rowBreak === Math.trunc(index / columns)){
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - 1 === index && rowBreak === Math.trunc(index / columns)){
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
         }
         else{
           setPropState('select-error');
@@ -553,14 +569,16 @@ const WordSearchGrid = () => {
       else if(direction === 'up' || direction === 'down'){
         if(clickedIndexes[clickedIndexes.length - 1] + columns === index){
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - columns === index){
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
         }
         else{
           setPropState('select-error');
@@ -569,14 +587,16 @@ const WordSearchGrid = () => {
       else if(direction === 'down-right' || direction === 'up-left'){
         if(clickedIndexes[clickedIndexes.length - 1] + (columns + 1) === index){
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - (columns + 1) === index){
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
         }
         else{
           setPropState('select-error');
@@ -585,14 +605,16 @@ const WordSearchGrid = () => {
       else if(direction === 'down-left' || direction === 'up-right'){
         if(clickedIndexes[clickedIndexes.length - 1] + (columns - 1) === index){
           clickedIndexes.push(index);
+          selectedLetters.push(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - (columns - 1) === index){
           clickedIndexes.unshift(index);
+          selectedLetters.unshift(letter);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
         }
         else{
           setPropState('select-error');
@@ -607,6 +629,7 @@ const WordSearchGrid = () => {
     }
 
     console.log(clickedIndexes);
+    console.log(selectedLetters);
     console.log(itemSelected);
     console.log(index);
     console.log(direction);
@@ -617,9 +640,9 @@ const WordSearchGrid = () => {
       <div className="word-search-grid-container">
         {gameArrayChunks.map((row, rowIndex) => (
           <div className="row" key={rowIndex}>
-            {row.map((value, index) => (
+            {row.map((letter, index) => (
               <WordSearchBlock 
-              value={value}
+              letter={letter}
               indexPos={rowIndex * gameArrayChunks[0].length + index}
               handleItemSelected={handleSelection}
               key={rowIndex * gameArrayChunks[0].length + index} />
@@ -630,7 +653,10 @@ const WordSearchGrid = () => {
       <div className='words-container'>
         <div className='words'>
           {words.map((word, index) => (
-            <p key={index}>- {word}</p>
+            <WordToSearch 
+            word={word} 
+            selectedLetters={selectedLetters} 
+            key={index} />
           ))}
         </div>
       </div>

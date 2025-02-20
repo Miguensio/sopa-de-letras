@@ -35,3 +35,7 @@
     margin: 10px 10px;
     padding: 5px;
 }
+
+.found-word{
+    background-color: rgb(30, 255, 0);
+}
