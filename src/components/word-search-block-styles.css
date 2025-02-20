@@ -18,3 +18,12 @@
     outline: 2px solid rgb(60, 241, 5);
     z-index: 100;
 }
+
+.select-error{
+    /* outline: 2px solid rgb(241, 5, 5); */
+    background-color: rgb(241, 5, 5);
+    transition-property: background-color;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+    z-index: 110;
+}

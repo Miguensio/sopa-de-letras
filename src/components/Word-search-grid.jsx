@@ -8,6 +8,7 @@ const WordSearchGrid = () => {
   let firstClickedIndex;
   let clickedIndexes = [];
   let direction = '';
+  let rowBreak;
 
   //Functions that check if it's possible to fill the array in different directions with the letters of a word
 
@@ -442,6 +443,17 @@ const WordSearchGrid = () => {
       })
   }
 
+  const deselectBlock = (clickedIndexes, index, setPropState) => {
+    if(clickedIndexes[0] === index){
+      clickedIndexes.shift();
+      setPropState('no-selected');
+    }
+    else if(clickedIndexes[clickedIndexes.length - 1] === index){
+      clickedIndexes.pop();
+      setPropState('no-selected');
+    }
+  }
+
   //const words = ["HOLA","POLOLA","PROBANDO","TAL","COMPA","PARALO"];
   const words = ["HOLA","CONSOLA","DIAGONAL","POLOLA","PROBA","COLA","TROLA","DALE","COMPA","DROGA"];
   const [rows, columns] = [12,15];
@@ -467,16 +479,20 @@ const WordSearchGrid = () => {
       }
     }
     else{
+      //If there's no set direction, then a direction gets set, and the index gets pushed or unshifted to the indexes array
+      //depending in the decided direction
       if(direction === ''){
         if(firstClickedIndex - index === -1){
           direction = 'right';
           setPropState('selected');
+          rowBreak = Math.trunc(index / columns);
           clickedIndexes.push(index);
         }
         else if(firstClickedIndex - index === 1){
           direction = 'left';
           setPropState('selected');
-          clickedIndexes.push(index);
+          rowBreak = Math.trunc(index / columns);
+          clickedIndexes.unshift(index);
         }
         else if(firstClickedIndex - index === columns * -1){
           direction = 'down';
@@ -486,7 +502,7 @@ const WordSearchGrid = () => {
         else if(firstClickedIndex - index === columns){
           direction = 'up';
           setPropState('selected');
-          clickedIndexes.push(index);
+          clickedIndexes.unshift(index);
         }
         else if(firstClickedIndex - index === (columns + 1) * -1){
           direction = 'down-right';
@@ -496,25 +512,100 @@ const WordSearchGrid = () => {
         else if(firstClickedIndex - index === columns + 1){
           direction = 'up-left';
           setPropState('selected');
-          clickedIndexes.push(index);
+          clickedIndexes.unshift(index);
         }
         else if(firstClickedIndex - index === columns - 1){
           direction = 'up-right';
           setPropState('selected');
-          clickedIndexes.push(index);
+          clickedIndexes.unshift(index);
         }
         else if(firstClickedIndex - index === (columns - 1) * -1){
           direction = 'down-left';
           setPropState('selected');
           clickedIndexes.push(index);
         }
-      }
-      else if(direction === 'right'){
-        if(clickedIndexes[0] - 1 === index || clickedIndexes[clickedIndexes.length - 1] + 1 === index){
-          
+        else if(firstClickedIndex === index){
+          setPropState('no-selected');
+          clickedIndexes.pop();
+          itemSelected = false;
+        }
+        else{
+          setPropState('select-error');
         }
       }
+      //If there's a decided direction then the indexes that can be selected are stored accordingly
+      else if(direction === 'right' || direction === 'left'){
+        if(clickedIndexes[clickedIndexes.length - 1] + 1 === index && rowBreak === Math.trunc(index / columns)){
+          clickedIndexes.push(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] - 1 === index && rowBreak === Math.trunc(index / columns)){
+          clickedIndexes.unshift(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
+          deselectBlock(clickedIndexes, index, setPropState);
+        }
+        else{
+          setPropState('select-error');
+        }
+      }
+      else if(direction === 'up' || direction === 'down'){
+        if(clickedIndexes[clickedIndexes.length - 1] + columns === index){
+          clickedIndexes.push(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] - columns === index){
+          clickedIndexes.unshift(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
+          deselectBlock(clickedIndexes, index, setPropState);
+        }
+        else{
+          setPropState('select-error');
+        }
+      }
+      else if(direction === 'down-right' || direction === 'up-left'){
+        if(clickedIndexes[clickedIndexes.length - 1] + (columns + 1) === index){
+          clickedIndexes.push(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] - (columns + 1) === index){
+          clickedIndexes.unshift(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
+          deselectBlock(clickedIndexes, index, setPropState);
+        }
+        else{
+          setPropState('select-error');
+        }
+      }
+      else if(direction === 'down-left' || direction === 'up-right'){
+        if(clickedIndexes[clickedIndexes.length - 1] + (columns - 1) === index){
+          clickedIndexes.push(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] - (columns - 1) === index){
+          clickedIndexes.unshift(index);
+          setPropState('selected');
+        }
+        else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
+          deselectBlock(clickedIndexes, index, setPropState);
+        }
+        else{
+          setPropState('select-error');
+        }
+      }
+      //If the array has 1 element after multiple deselections then direction is not decided
+      if(clickedIndexes.length < 2){
+        direction = '';
+        firstClickedIndex = clickedIndexes[0];
+      }
+
     }
+
     console.log(clickedIndexes);
     console.log(itemSelected);
     console.log(index);
