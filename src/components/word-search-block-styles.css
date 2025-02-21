@@ -18,6 +18,10 @@
 
 .no-selected{
     border: none;
+    background-color: none;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
 }
 
 .selected{
@@ -31,8 +35,8 @@
 .select-error{
     /* outline: 2px solid rgb(241, 5, 5); */
     background-color: rgb(241, 5, 5) !important;
-    transition-property: outline;
-    transition-duration: 0.25s;
+    transition-property: background-color;
+    transition-duration: 0.5s;
     transition-timing-function: ease-out;
     z-index: 110;
 }
