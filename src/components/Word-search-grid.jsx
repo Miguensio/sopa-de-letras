@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import WordSearchBlock from './word-search-block';
 import './word-search-grid-styles.css';
 import WordToSearch from './Word-to-search';
@@ -6,9 +6,12 @@ import WordToSearch from './Word-to-search';
 const WordSearchGrid = () => {
 
   let itemSelected = false;
+  let foundWords = 0;
   let firstClickedIndex;
   let clickedIndexes = [];
   let selectedLetters = [];
+  let selectedStates = [];
+  let selectedFound = [];
   let direction = '';
   let rowBreak;
 
@@ -445,17 +448,80 @@ const WordSearchGrid = () => {
       })
   }
 
-  const deselectBlock = (clickedIndexes, index, setPropState, selectedLetters) => {
+  const deselectBlock = (clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound) => {
     if(clickedIndexes[0] === index){
       clickedIndexes.shift();
       selectedLetters.shift();
+      selectedStates.shift();
+      selectedFound.shift();
       setPropState('no-selected');
     }
     else if(clickedIndexes[clickedIndexes.length - 1] === index){
       clickedIndexes.pop();
       selectedLetters.pop();
+      selectedStates.pop();
+      selectedFound.pop();
       setPropState('no-selected');
     }
+  }
+
+  const handleFoundWord = (word, setWordFound) => {
+    let wordLetters = [];
+    let foundWord;
+    console.log(word);
+    console.log(selectedLetters);
+
+    for(let i = 0; i < word.length; i++){
+      wordLetters.push(word[i]);
+    }
+
+    wordLetters.sort();
+    selectedLetters.sort();
+
+    if(wordLetters.length === selectedLetters.length){
+      for(let i = 0; i < wordLetters.length; i++){
+        if(!wordLetters[i] === selectedLetters[i]){
+          foundWord = false;
+          break;
+        }
+        else{
+          foundWord = true
+        }
+      }
+    }
+    else{
+      foundWord = false;
+    }
+
+    if(foundWord){
+      setWordFound('found-word');
+      for(let i = 0; i < selectedStates.length; i++){
+        let setSelectedState = selectedStates[i];
+        let setFoundState = selectedFound[i];
+        setSelectedState('no-selected');
+        setFoundState('found');
+      }
+      resetSelections();
+      foundWords++;
+    }
+    else{
+      console.log("La palabra no coincide");
+    }
+
+    if(foundWords === words.length){
+      console.log("Felicidades completaste la sopa de letras");
+    }
+
+  }
+
+  const resetSelections = () => {
+    itemSelected = false;
+    firstClickedIndex = null;
+    clickedIndexes = [];
+    selectedLetters = [];
+    selectedStates = [];
+    selectedFound = [];
+    direction = '';
   }
 
   //const words = ["HOLA","POLOLA","PROBANDO","TAL","COMPA","PARALO"];
@@ -471,7 +537,7 @@ const WordSearchGrid = () => {
 
   console.log(gameArrayChunks);
 
-  const handleSelection = (propState, setPropState, index, letter) => {
+  const handleSelection = (propState, setPropState, index, letter, setNotFound) => {
     //If no item is selected yet the prop state is changed and the index is saved
     //If there's an item selected then a direction needs to be decided based on the next element the user selects
     if(!itemSelected){
@@ -481,6 +547,8 @@ const WordSearchGrid = () => {
         firstClickedIndex = index;
         clickedIndexes.push(index);
         selectedLetters.push(letter);
+        selectedStates.push(setPropState);
+        selectedFound.push(setNotFound);
       }
     }
     else{
@@ -493,6 +561,8 @@ const WordSearchGrid = () => {
           rowBreak = Math.trunc(index / columns);
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
         }
         else if(firstClickedIndex - index === 1){
           direction = 'left';
@@ -500,47 +570,63 @@ const WordSearchGrid = () => {
           rowBreak = Math.trunc(index / columns);
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
         }
         else if(firstClickedIndex - index === columns * -1){
           direction = 'down';
           setPropState('selected');
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
         }
         else if(firstClickedIndex - index === columns){
           direction = 'up';
           setPropState('selected');
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
         }
         else if(firstClickedIndex - index === (columns + 1) * -1){
           direction = 'down-right';
           setPropState('selected');
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
         }
         else if(firstClickedIndex - index === columns + 1){
           direction = 'up-left';
           setPropState('selected');
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
         }
         else if(firstClickedIndex - index === columns - 1){
           direction = 'up-right';
           setPropState('selected');
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
         }
         else if(firstClickedIndex - index === (columns - 1) * -1){
           direction = 'down-left';
           setPropState('selected');
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
         }
         else if(firstClickedIndex === index){
           setPropState('no-selected');
           clickedIndexes.pop();
           selectedLetters.pop();
+          selectedStates.pop();
+          selectedFound.pop();
           itemSelected = false;
         }
         else{
@@ -552,15 +638,19 @@ const WordSearchGrid = () => {
         if(clickedIndexes[clickedIndexes.length - 1] + 1 === index && rowBreak === Math.trunc(index / columns)){
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - 1 === index && rowBreak === Math.trunc(index / columns)){
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound);
         }
         else{
           setPropState('select-error');
@@ -570,15 +660,19 @@ const WordSearchGrid = () => {
         if(clickedIndexes[clickedIndexes.length - 1] + columns === index){
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - columns === index){
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound);
         }
         else{
           setPropState('select-error');
@@ -588,15 +682,19 @@ const WordSearchGrid = () => {
         if(clickedIndexes[clickedIndexes.length - 1] + (columns + 1) === index){
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - (columns + 1) === index){
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound);
         }
         else{
           setPropState('select-error');
@@ -606,15 +704,19 @@ const WordSearchGrid = () => {
         if(clickedIndexes[clickedIndexes.length - 1] + (columns - 1) === index){
           clickedIndexes.push(index);
           selectedLetters.push(letter);
+          selectedStates.push(setPropState);
+          selectedFound.push(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] - (columns - 1) === index){
           clickedIndexes.unshift(index);
           selectedLetters.unshift(letter);
+          selectedStates.unshift(setPropState);
+          selectedFound.unshift(setNotFound);
           setPropState('selected');
         }
         else if(clickedIndexes[0] === index || clickedIndexes[clickedIndexes.length - 1] === index){
-          deselectBlock(clickedIndexes, index, setPropState, selectedLetters);
+          deselectBlock(clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound);
         }
         else{
           setPropState('select-error');
@@ -654,8 +756,8 @@ const WordSearchGrid = () => {
         <div className='words'>
           {words.map((word, index) => (
             <WordToSearch 
-            word={word} 
-            selectedLetters={selectedLetters} 
+            word={word}
+            handleFoundWord={handleFoundWord}
             key={index} />
           ))}
         </div>

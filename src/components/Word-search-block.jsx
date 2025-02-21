@@ -4,27 +4,27 @@ import './word-search-block-styles.css';
 const WordSearchBlock = ({ letter, indexPos, handleItemSelected }) => {
 
     const [isSelected, setIsSelected] = useState("no-selected");
+    const [notFound, setNotFound] = useState('');
 
     const handleClick = () => {
-			handleItemSelected(isSelected, setIsSelected, indexPos, letter);
+			handleItemSelected(isSelected, setIsSelected, indexPos, letter, setNotFound);
 		}
 
 
-        useEffect(() => {
-            if (isSelected === 'select-error') {
-              const timer = setTimeout(() => {
-                setIsSelected('no-selected');
-              }, 350);
-          
-              return () => clearTimeout(timer);
-            }
-          }, [isSelected, setIsSelected]);
+    useEffect(() => {
+      if (isSelected === 'select-error') {
+        const timer = setTimeout(() => {
+          setIsSelected('no-selected');
+        }, 350);
+    
+        return () => clearTimeout(timer);
+      }
+    }, [isSelected, setIsSelected]);
 
-          
     return (
-        <div className={`block ${isSelected}`} onClick={() => handleClick()}>
-            {letter}
-        </div>
+      <div className={`block ${isSelected} ${notFound}`} onClick={() => handleClick()}>
+        {letter}
+      </div>
     );
 }
 
