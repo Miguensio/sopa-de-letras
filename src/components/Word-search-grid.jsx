@@ -637,6 +637,13 @@ const WordSearchGrid = () => {
           itemSelected = false;
         }
         else{
+          for(let i = 1; i < (clickedIndexes.length - 1); i++){
+            if(clickedIndexes[i] === index){
+              let setState = selectedStates[i];
+              setState('block-failed-match');
+              return;
+            }
+          }
           setPropState('select-error');
         }
       }
@@ -660,6 +667,13 @@ const WordSearchGrid = () => {
           deselectBlock(clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound);
         }
         else{
+          for(let i = 1; i < (clickedIndexes.length - 1); i++){
+            if(clickedIndexes[i] === index){
+              let setState = selectedStates[i];
+              setState('block-failed-match');
+              return;
+            }
+          }
           setPropState('select-error');
         }
       }
@@ -682,6 +696,13 @@ const WordSearchGrid = () => {
           deselectBlock(clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound);
         }
         else{
+          for(let i = 1; i < (clickedIndexes.length - 1); i++){
+            if(clickedIndexes[i] === index){
+              let setState = selectedStates[i];
+              setState('block-failed-match');
+              return;
+            }
+          }
           setPropState('select-error');
         }
       }
@@ -704,6 +725,13 @@ const WordSearchGrid = () => {
           deselectBlock(clickedIndexes, index, setPropState, selectedLetters, selectedStates, selectedFound);
         }
         else{
+          for(let i = 1; i < (clickedIndexes.length - 1); i++){
+            if(clickedIndexes[i] === index){
+              let setState = selectedStates[i];
+              setState('block-failed-match');
+              return;
+            }
+          }
           setPropState('select-error');
         }
       }
