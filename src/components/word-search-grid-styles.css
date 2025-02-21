@@ -1,8 +1,17 @@
+.game-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .word-search-grid-container{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: max-content;
+    width: max-content;
+    outline: 3px solid rgb(192, 192, 192);
 }
   
 .row{
@@ -33,10 +42,37 @@
     font-weight: bold;
     color: rgb(255, 255, 255);
     margin: 10px 10px;
-    padding: 5px 10px;
+    padding: 7px 10px;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.word:hover{
+    background-color: rgb(63, 63, 63);
+    transition-property: background-color;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-out;
 }
 
 .found-word{
     background-color: rgb(45, 194, 0);
-    border-radius: 20px;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+}
+
+.no-match{
+    background-color: rgb(207, 0, 0) !important;
+    transition-property: background-color;
+    transition-duration: 0.25s;
+}
+
+.fade-out{
+    transition-property: background-color;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+.found-word:hover{
+    background-color: rgb(45, 194, 0)
 }

@@ -354,45 +354,6 @@ const WordSearchGrid = () => {
       if(!(gameArray[randomPosition] === string[0] || gameArray[randomPosition] === '0' )){
         continue;
       }
-      
-      let positionUp = checkSpaceUp(randomPosition, columns, wordSize, gameArray, string);
-
-      console.log("Checkeo si se puede hacia arriba: ", string, "desde la posición: ",randomPosition, positionUp);
-
-      if(positionUp){
-        fillUp(randomPosition, gameArray, string, columns, wordSize);
-        i++;
-        continue;
-      }
-      let positionDown = checkSpaceDown(randomPosition, columns, wordSize, gameArray.length, gameArray, string);
-
-      console.log("Checkeo si se puede hacia abajo: ", string, "desde la posición: ",randomPosition, positionDown);
-
-      if(positionDown){
-        fillDown(randomPosition, gameArray, string, columns, wordSize);
-        i++;
-        continue;
-      }
-
-      let positionLeft = checkSpaceLeft(randomPosition, columns, wordSize, string, gameArray);
-
-      console.log("Checkeo si se puede hacia la izquierda: ", string, "desde la posición: ",randomPosition, positionLeft);
-
-      if(positionLeft){
-        fillLeft(randomPosition, gameArray, string, wordSize);
-        i++;
-        continue;
-      }
-
-      let positionRight = checkSpaceRight(randomPosition, columns, wordSize, gameArray.length, string, gameArray);
-
-      console.log("Checkeo si se puede hacia la derecha: ", string, "desde la posición: ",randomPosition, positionRight);
-
-      if(positionRight){
-        fillRight(randomPosition, gameArray, string, wordSize);
-        i++;
-        continue;
-      }
 
       let positionDownRight = checkSpaceDownRight(randomPosition, rows, columns, wordSize, gameArray.length, string, gameArray);
 
@@ -434,6 +395,45 @@ const WordSearchGrid = () => {
         continue;
       }
 
+      let positionUp = checkSpaceUp(randomPosition, columns, wordSize, gameArray, string);
+
+      console.log("Checkeo si se puede hacia arriba: ", string, "desde la posición: ",randomPosition, positionUp);
+
+      if(positionUp){
+        fillUp(randomPosition, gameArray, string, columns, wordSize);
+        i++;
+        continue;
+      }
+      let positionDown = checkSpaceDown(randomPosition, columns, wordSize, gameArray.length, gameArray, string);
+
+      console.log("Checkeo si se puede hacia abajo: ", string, "desde la posición: ",randomPosition, positionDown);
+
+      if(positionDown){
+        fillDown(randomPosition, gameArray, string, columns, wordSize);
+        i++;
+        continue;
+      }
+
+      let positionLeft = checkSpaceLeft(randomPosition, columns, wordSize, string, gameArray);
+
+      console.log("Checkeo si se puede hacia la izquierda: ", string, "desde la posición: ",randomPosition, positionLeft);
+
+      if(positionLeft){
+        fillLeft(randomPosition, gameArray, string, wordSize);
+        i++;
+        continue;
+      }
+
+      let positionRight = checkSpaceRight(randomPosition, columns, wordSize, gameArray.length, string, gameArray);
+
+      console.log("Checkeo si se puede hacia la derecha: ", string, "desde la posición: ",randomPosition, positionRight);
+
+      if(positionRight){
+        fillRight(randomPosition, gameArray, string, wordSize);
+        i++;
+        continue;
+      }
+
     }
     console.log(gameArray);
     return gameArray;
@@ -465,53 +465,60 @@ const WordSearchGrid = () => {
     }
   }
 
-  const handleFoundWord = (word, setWordFound) => {
-    let wordLetters = [];
-    let foundWord;
-    console.log(word);
-    console.log(selectedLetters);
+  const handleFoundWord = (word, setWordFound, isFound, setIsFound) => {
+    if(!isFound){
+      let wordLetters = [];
+      let foundWord;
+      console.log(word);
+      console.log(selectedLetters);
 
-    for(let i = 0; i < word.length; i++){
-      wordLetters.push(word[i]);
-    }
+      for(let i = 0; i < word.length; i++){
+        wordLetters.push(word[i]);
+      }
 
-    wordLetters.sort();
-    selectedLetters.sort();
+      wordLetters.sort();
+      selectedLetters.sort();
 
-    if(wordLetters.length === selectedLetters.length){
-      for(let i = 0; i < wordLetters.length; i++){
-        if(!wordLetters[i] === selectedLetters[i]){
-          foundWord = false;
-          break;
-        }
-        else{
-          foundWord = true
+      if(wordLetters.length === selectedLetters.length){
+        for(let i = 0; i < wordLetters.length; i++){
+          if(!(wordLetters[i] === selectedLetters[i])){
+            foundWord = false;
+            break;
+          }
+          else{
+            foundWord = true
+          }
         }
       }
-    }
-    else{
-      foundWord = false;
-    }
-
-    if(foundWord){
-      setWordFound('found-word');
-      for(let i = 0; i < selectedStates.length; i++){
-        let setSelectedState = selectedStates[i];
-        let setFoundState = selectedFound[i];
-        setSelectedState('no-selected');
-        setFoundState('found');
+      else{
+        foundWord = false;
       }
-      resetSelections();
-      foundWords++;
-    }
-    else{
-      console.log("La palabra no coincide");
-    }
 
-    if(foundWords === words.length){
-      console.log("Felicidades completaste la sopa de letras");
-    }
+      if(foundWord){
+        setWordFound('found-word');
+        for(let i = 0; i < selectedStates.length; i++){
+          let setSelectedState = selectedStates[i];
+          let setFoundState = selectedFound[i];
+          setSelectedState('no-selected');
+          setFoundState('found');
+        }
+        resetSelections();
+        foundWords++;
+        setIsFound(true);
+      }
+      else{
+        console.log("La palabra no coincide");
+        setWordFound('no-match');
+        for(let i = 0; i < selectedStates.length; i++){
+          let setSelectedState = selectedStates[i];
+          setSelectedState('block-failed-match');
+        }
+      }
 
+      if(foundWords === words.length){
+        console.log("Felicidades completaste la sopa de letras");
+      }
+    }
   }
 
   const resetSelections = () => {

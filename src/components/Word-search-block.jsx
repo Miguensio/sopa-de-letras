@@ -12,10 +12,17 @@ const WordSearchBlock = ({ letter, indexPos, handleItemSelected }) => {
 
 
     useEffect(() => {
-      if (isSelected === 'select-error') {
+      if(isSelected === 'select-error'){
         const timer = setTimeout(() => {
           setIsSelected('no-selected');
         }, 350);
+    
+        return () => clearTimeout(timer);
+      }
+      else if(isSelected === 'block-failed-match'){
+        const timer = setTimeout(() => {
+          setIsSelected('selected');
+        }, 450);
     
         return () => clearTimeout(timer);
       }
