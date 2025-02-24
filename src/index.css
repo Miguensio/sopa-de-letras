@@ -31,10 +31,13 @@
 .text-container h2{
   margin: 20px;
   text-align: center;
+  font-weight: 700;
 }
 
 .text-container p{
   line-height: 2rem;
+  background-color: rgba(0, 0, 0, 0);
+  height: max-content;
 }
 
 .rules-container{
@@ -48,5 +51,21 @@
 }
 
 .rule-container{
+  padding: 10px;
+  margin: 20px 0;
   display: flex;
+  align-items: center;
+  background-color: rgb(71, 71, 71, 0.7);
+  border-radius: 15px;
+}
+
+.rule-container p{
+  padding: 5px;
+}
+
+.rule-container img{
+  object-fit: contain;
+  width: 250px;
+  height: 250px;
+  border-radius: 20px;
 }

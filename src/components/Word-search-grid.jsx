@@ -15,6 +15,8 @@ const WordSearchGrid = () => {
   let direction = '';
   let rowBreak;
 
+  const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
   //Functions that check if it's possible to fill the array in different directions with the letters of a word
 
   //wordLimit stores how much space the word is going to occupy
@@ -531,14 +533,25 @@ const WordSearchGrid = () => {
     direction = '';
   }
 
+  const addLetters = (gameArray, letters) => {
+    for(let i = 0; i < gameArray.length; i++){
+      if(gameArray[i] === '0'){
+        gameArray[i] = letters[Math.floor((Math.random() * letters.length))];
+      }
+    }
+    return gameArray;
+  }
+
   //const words = ["HOLA","POLOLA","PROBANDO","TAL","COMPA","PARALO"];
-  const words = ["HOLA","CONSOLA","DIAGONAL","POLOLA","PROBA","COLA","TROLA","DALE","COMPA","DROGA"];
+  const words = ["HOLA","CONSOLA","DIAGONAL","PROBA","COLA","BROMA","DALE","COMPA","TRAICION"];
   const [rows, columns] = [12,15];
   const size = rows * columns;
 
   console.log(size);
 
   let gameArray = createGameArray(words);
+
+  gameArray = addLetters(gameArray, letters);
 
   let gameArrayChunks = chunkArray(gameArray, columns);
 
