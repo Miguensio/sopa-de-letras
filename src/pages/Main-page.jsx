@@ -1,25 +1,30 @@
+import { useState } from 'react';
+
 import Navbar from '../components/Nav';
+import StartGameMenu from '../components/Start-Game-Menu';
 import WordSearchGrid from '../components/Word-search-grid';
 import useFetchWords from '../hooks/useFetchWordsearchWords';
 
 function Home(){
 
-  useFetchWords("vehiculos");
+  const [showWordsearch, setShowWordsearch] = useState(false);
 
-    return (
-        <div className='page-container'>
-          <Navbar />
+  //const { theme, words, columns, rows, error } = useFetchWords("vehiculos");
 
-          <div className='input-container'>
-            <input type="text" placeholder='Introduzca una temática'/>
-            <button>Generar</button>
-          </div>
+  return (
+    <div className='page-container'>
+      <Navbar />
 
-          <div className="game-container">
-            <WordSearchGrid />
-          </div>
-        </div>
-      );
+      <StartGameMenu 
+      setShowWordsearch={setShowWordsearch} />
+
+      {showWordsearch && 
+      <div className="game-container">
+        <WordSearchGrid />
+      </div>
+      }
+    </div>
+  );
 
 }
 
