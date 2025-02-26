@@ -1,9 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import WordSearchBlock from './word-search-block';
 import './word-search-grid-styles.css';
 import WordToSearch from './Word-to-search';
 
-const WordSearchGrid = () => {
+const WordSearchGrid = ({ theme, words, columns, rows }) => {
+
+  console.log(words);
 
   let itemSelected = false;
   let foundWords = 0;
@@ -14,6 +16,8 @@ const WordSearchGrid = () => {
   let selectedFound = [];
   let direction = '';
   let rowBreak;
+
+  let toBeDeleted = [];
 
   const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 
@@ -85,11 +89,9 @@ const WordSearchGrid = () => {
     for(let j = 0; j < wordLength; j++){
       let startingPosition = position - controlPosition;
       if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
-        console.log("Posición: ", startingPosition, gameArray[startingPosition], word[j]);
         controlPosition = controlPosition + 1;
       }
       else{
-        console.log("Retorna falso: ", "Posición: ", startingPosition, gameArray[startingPosition], word[j]);
         return false;
       }
     }
@@ -116,11 +118,9 @@ const WordSearchGrid = () => {
     for(let j = 0; j < wordLength; j++){
       let startingPosition = position + controlPosition;
       if(gameArray[startingPosition] === '0' || gameArray[startingPosition] === word[j]){
-        console.log("Posición: ", startingPosition, gameArray[startingPosition], word[j]);
         controlPosition = controlPosition + 1;
       }
       else{
-        console.log("Retorna falso: ", "Posición: ", startingPosition, gameArray[startingPosition], word[j]);
         return false;
       }
     }
@@ -345,6 +345,7 @@ const WordSearchGrid = () => {
   const createGameArray = (words) => {
     const gameArray = new Array(size);
     gameArray.fill('0');
+    let count = 0;
 
     let i = 0;
 
@@ -364,6 +365,7 @@ const WordSearchGrid = () => {
       if(positionDownRight){
         fillDownRight(randomPosition, columns, wordSize, string, gameArray);
         i++;
+        count = 0;
         continue;
       }
   
@@ -374,6 +376,7 @@ const WordSearchGrid = () => {
       if(positionDownLeft){
         fillDownLeft(randomPosition, columns, wordSize, string, gameArray);
         i++;
+        count = 0;
         continue;
       }
 
@@ -384,6 +387,7 @@ const WordSearchGrid = () => {
       if(positionUpLeft){
         fillUpLeft(randomPosition, columns, wordSize, string, gameArray);
         i++;
+        count = 0;
         continue;
       }
 
@@ -394,6 +398,7 @@ const WordSearchGrid = () => {
       if(positionUpRight){
         fillUpRight(randomPosition, columns, wordSize, string, gameArray);
         i++;
+        count = 0;
         continue;
       }
 
@@ -404,6 +409,7 @@ const WordSearchGrid = () => {
       if(positionUp){
         fillUp(randomPosition, gameArray, string, columns, wordSize);
         i++;
+        count = 0;
         continue;
       }
       let positionDown = checkSpaceDown(randomPosition, columns, wordSize, gameArray.length, gameArray, string);
@@ -413,6 +419,7 @@ const WordSearchGrid = () => {
       if(positionDown){
         fillDown(randomPosition, gameArray, string, columns, wordSize);
         i++;
+        count = 0;
         continue;
       }
 
@@ -423,6 +430,7 @@ const WordSearchGrid = () => {
       if(positionLeft){
         fillLeft(randomPosition, gameArray, string, wordSize);
         i++;
+        count = 0;
         continue;
       }
 
@@ -433,11 +441,30 @@ const WordSearchGrid = () => {
       if(positionRight){
         fillRight(randomPosition, gameArray, string, wordSize);
         i++;
+        count = 0;
         continue;
+      }
+
+      if(count > 50){
+        toBeDeleted.push(i);
+        console.log("Se resistió: ",words[i]);
+        count = 0;
+        i++;
+        continue;
+      }
+      else{
+        count++
       }
 
     }
     console.log(gameArray);
+
+    if(toBeDeleted.length > 0){
+      for(let i = 0; i < toBeDeleted.length; i++){
+        words.splice(toBeDeleted[i])
+      }
+    }
+
     return gameArray;
   }
 
@@ -516,10 +543,6 @@ const WordSearchGrid = () => {
           setSelectedState('block-failed-match');
         }
       }
-
-      if(foundWords === words.length){
-        console.log("Felicidades completaste la sopa de letras");
-      }
     }
   }
 
@@ -543,6 +566,8 @@ const WordSearchGrid = () => {
   }
 
   //const words = ["HOLA","POLOLA","PROBANDO","TAL","COMPA","PARALO"];
+
+  /*
   const words = ["HOLA","CONSOLA","DIAGONAL","PROBA","COLA","BROMA","DALE","COMPA","TRAICION"];
   const [rows, columns] = [12,15];
   const size = rows * columns;
@@ -556,6 +581,18 @@ const WordSearchGrid = () => {
   let gameArrayChunks = chunkArray(gameArray, columns);
 
   console.log(gameArrayChunks);
+
+  */
+
+  const size = rows * columns;
+
+  let gameArray = createGameArray(words);
+
+  gameArray = addLetters(gameArray, letters);
+
+  let gameArrayChunks = chunkArray(gameArray, columns);
+
+  console.log(words);
 
   const handleSelection = (propState, setPropState, index, letter, setNotFound) => {
     //If no item is selected yet the prop state is changed and the index is saved
@@ -794,6 +831,7 @@ const WordSearchGrid = () => {
 
   return (
     <>
+      <h2>{ theme }</h2>
       <div className="word-search-grid-container">
         {gameArrayChunks.map((row, rowIndex) => (
           <div className="row" key={rowIndex}>

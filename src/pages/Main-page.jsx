@@ -3,11 +3,13 @@ import { useState } from 'react';
 import Navbar from '../components/Nav';
 import StartGameMenu from '../components/Start-Game-Menu';
 import WordSearchGrid from '../components/Word-search-grid';
-import useFetchWords from '../hooks/useFetchWordsearchWords';
 
 function Home(){
-
   const [showWordsearch, setShowWordsearch] = useState(false);
+  const [words, setWords] = useState([]);
+  const [columns, setColumns] = useState('');
+  const [rows, setRows] = useState('');
+  const [inputTheme, setInputTheme] = useState('');
 
   //const { theme, words, columns, rows, error } = useFetchWords("vehiculos");
 
@@ -16,11 +18,19 @@ function Home(){
       <Navbar />
 
       <StartGameMenu 
-      setShowWordsearch={setShowWordsearch} />
+      setShowWordsearch={setShowWordsearch}
+      setInputTheme={setInputTheme}
+      setWords={setWords}
+      setColumns={setColumns}
+      setRows={setRows} />
 
       {showWordsearch && 
       <div className="game-container">
-        <WordSearchGrid />
+        <WordSearchGrid 
+        theme={inputTheme}
+        words={words}
+        columns={columns}
+        rows={rows} />
       </div>
       }
     </div>
