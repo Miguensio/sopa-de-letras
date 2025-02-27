@@ -1,17 +1,17 @@
 import './start-game-styles.css';
 import useFetchWords from '../hooks/useFetchWordsearchWords';
 
-function StartGameMenu({ setShowWordsearch, setInputTheme, setWords, setColumns, setRows, setIsLoading }){
+function StartGameMenu({ setShowWordsearch, setInputTheme, setWords, setColumns, setRows, setIsLoading, setError }){
 
 	const handleClickRandom = () => {
 		setIsLoading(true);
-		useFetchWords("aleatorio", setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading);
+		useFetchWords("aleatorio", setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading, setError);
 	}
 
 	const handleClickTheme = () => {
 		setIsLoading(true);
 		const theme = document.getElementById("theme-input").value;
-		useFetchWords(theme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading);
+		useFetchWords(theme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading, setError);
 	}
 
 	return(
@@ -19,7 +19,7 @@ function StartGameMenu({ setShowWordsearch, setInputTheme, setWords, setColumns,
 			<div className="start-menu-content">
 				<h2>Introduzca un tema para la sopa de letras...</h2>
 				<div className="input-container">
-					<input id="theme-input" type="text" placeholder="Introduzca una temática"/>
+					<input id="theme-input" type="text" placeholder="Introduzca un tema"/>
 					<button onClick={handleClickTheme}>Generar</button>
 				</div>
 				<h2>O genere una sopa de letras de tema aleatorio.</h2>

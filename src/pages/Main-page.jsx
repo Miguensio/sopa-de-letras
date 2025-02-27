@@ -11,13 +11,27 @@ function Home(){
   const [rows, setRows] = useState('');
   const [inputTheme, setInputTheme] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    window.scrollBy({
-      top: window.innerHeight,
-      behavior: 'smooth'
-    });
+    if(words.length !== 0){
+      window.scrollBy({
+        top: window.innerHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [words]);
+
+  useEffect(() => {
+    if(error !== null){
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+
+    }
+  }, [error]);
 
   return (
     <div className='page-container'>
@@ -29,7 +43,8 @@ function Home(){
       setWords={setWords}
       setColumns={setColumns}
       setRows={setRows} 
-      setIsLoading={setIsLoading}/>
+      setIsLoading={setIsLoading}
+      setError={setError} />
 
       {isLoading &&
         <div className='loading'>
@@ -46,6 +61,9 @@ function Home(){
         rows={rows} />
       </div>
       }
+
+      {error && <div className='error-container'><p>Ocurrió un error procesando su acción. Intente de nuevo.</p></div>}
+
     </div>
   );
 

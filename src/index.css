@@ -24,6 +24,7 @@
   font-family: sans-serif;
   font-size: 1.2rem;
   max-width: 800px;
+  padding: 0 15px;
   margin: 25px 0;
   color: rgb(255, 255, 255);
 }
@@ -60,7 +61,7 @@
 }
 
 .rule-container p{
-  padding: 5px;
+  padding: 10px;
 }
 
 .rule-container img{
@@ -95,4 +96,63 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@media only screen and (max-width: 576px){
+  .rule-container{
+    text-align: center;
+    flex-direction: column;
+  }
+
+  .rule-container img{
+    margin: 20px 0;
+    width: 300px;
+  }
+}
+
+.error-container{
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 400px;
+  height: 120px;
+  border-radius: 30px;
+  background-color: rgba(194, 22, 22, 0.8);
+  border: 5px solid rgba(221, 1, 1, 0.8);
+}
+
+.error-container p{
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  color: rgb(255, 255, 255);
+  background-color: rgb(71, 71, 71, 0.0);
+}
+
+@media only screen and (max-width: 768px){
+  .error-container{
+    width: 50%;
+  }
+
+  .error-container p{
+    font-size: 1.2rem;
+  }
+
+}
+
+@media only screen and (max-width: 500px){
+  .error-container{
+    width: 90%;
+  }
+
+  .error-container p{
+    font-size: 1.2rem;
+  }
 }

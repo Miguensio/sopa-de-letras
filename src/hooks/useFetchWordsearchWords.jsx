@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-async function useFetchWords(wordsearchTheme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading){
+async function useFetchWords(wordsearchTheme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading, setError){
 
     const apiKey = "AIzaSyBxayQluPAL1WF547ILMXsC77qFJpbEFDQ";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -39,6 +39,7 @@ async function useFetchWords(wordsearchTheme, setInputTheme, setWords, setColumn
                 setShowWordsearch(true);
 
                 setIsLoading(false);
+                setError(null);
 
             } 
             catch (error) {
@@ -49,6 +50,8 @@ async function useFetchWords(wordsearchTheme, setInputTheme, setWords, setColumn
         } 
         else{
             console.log("No se pudo obtener la respuesta esperada");
+            setError('Ocurrió un error con su input, intente de nuevo');
+            setIsLoading(false);
         }
     })
     .catch(error => {
