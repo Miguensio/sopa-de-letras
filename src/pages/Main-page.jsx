@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Navbar from '../components/Nav';
 import StartGameMenu from '../components/Start-Game-Menu';
@@ -10,8 +10,14 @@ function Home(){
   const [columns, setColumns] = useState('');
   const [rows, setRows] = useState('');
   const [inputTheme, setInputTheme] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  //const { theme, words, columns, rows, error } = useFetchWords("vehiculos");
+  useEffect(() => {
+    window.scrollBy({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    });
+  }, [words]);
 
   return (
     <div className='page-container'>
@@ -22,9 +28,16 @@ function Home(){
       setInputTheme={setInputTheme}
       setWords={setWords}
       setColumns={setColumns}
-      setRows={setRows} />
+      setRows={setRows} 
+      setIsLoading={setIsLoading}/>
 
-      {showWordsearch && 
+      {isLoading &&
+        <div className='loading'>
+          <div className="spinner"></div>
+        </div>
+      }
+
+      {showWordsearch &&
       <div className="game-container">
         <WordSearchGrid 
         theme={inputTheme}

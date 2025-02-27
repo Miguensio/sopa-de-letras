@@ -16,7 +16,7 @@ function WordToSearch({ word, handleFoundWord }){
   }, [wordFound]);
 
   return(
-		<p className={`word ${wordFound}`} onClick={() => handleFoundWord(word, setWordFound, isFound, setIsFound)}>- { word }</p>
+		<p className={`word ${wordFound}`} onClick={() => handleFoundWord(word, setWordFound, isFound, setIsFound)}>-{ word }</p>
   );
 
 }

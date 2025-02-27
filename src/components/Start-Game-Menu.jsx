@@ -1,15 +1,17 @@
 import './start-game-styles.css';
 import useFetchWords from '../hooks/useFetchWordsearchWords';
 
-function StartGameMenu({ setShowWordsearch, setInputTheme, setWords, setColumns, setRows }){
+function StartGameMenu({ setShowWordsearch, setInputTheme, setWords, setColumns, setRows, setIsLoading }){
 
 	const handleClickRandom = () => {
-		useFetchWords("aleatorio", setInputTheme, setWords, setColumns, setRows, setShowWordsearch);
+		setIsLoading(true);
+		useFetchWords("aleatorio", setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading);
 	}
 
 	const handleClickTheme = () => {
+		setIsLoading(true);
 		const theme = document.getElementById("theme-input").value;
-		useFetchWords(theme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch);
+		useFetchWords(theme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading);
 	}
 
 	return(

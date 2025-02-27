@@ -831,7 +831,7 @@ const WordSearchGrid = ({ theme, words, columns, rows }) => {
 
   return (
     <>
-      <h2>{ theme }</h2>
+      <h2 className='wordsearch-theme' >{ theme }</h2>
       <div className="word-search-grid-container">
         {gameArrayChunks.map((row, rowIndex) => (
           <div className="row" key={rowIndex}>
