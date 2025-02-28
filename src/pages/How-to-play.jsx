@@ -4,6 +4,7 @@ import WordSelection from '../images/wordselection.png';
 import SelectionError from '../images/selection error.png';
 import SelectionCorrect from '../images/selection correct.png';
 import Navbar from '../components/Nav';
+import Footer from '../components/Footer';
 
 function HowToPlay(){
 	return(
@@ -63,6 +64,9 @@ function HowToPlay(){
 					</div>
 				</div>
 			</main>
+
+			<Footer />
+
 		</div>
 	);
 }

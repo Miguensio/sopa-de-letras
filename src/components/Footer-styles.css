@@ -1,0 +1,28 @@
+.footer{
+    background-color: rgb(20, 20, 20);
+    color: rgb(255, 255, 255);
+    font-family: sans-serif;
+    font-size: 1.3rem;
+    padding: 10px;
+}
+
+.footer a, .footer p{
+    background-color: rgba(0, 0, 0, 0);
+    padding: 5px;
+}
+
+.footer p{
+    margin: 10px 0;
+}
+
+.links{
+    background-color: rgb(20, 20, 20)
+}
+
+.links a{
+    color: rgb(117, 45, 175);
+}
+
+.links a:hover{
+    color: rgb(79, 29, 121);
+}

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Navbar from '../components/Nav';
 import StartGameMenu from '../components/Start-Game-Menu';
 import WordSearchGrid from '../components/Word-search-grid';
+import Footer from '../components/Footer';
 
 function Home(){
   const [showWordsearch, setShowWordsearch] = useState(false);
@@ -53,16 +54,18 @@ function Home(){
       }
 
       {showWordsearch &&
-      <div className="game-container">
+      <main className="game-container">
         <WordSearchGrid 
         theme={inputTheme}
         words={words}
         columns={columns}
         rows={rows} />
-      </div>
+      </main>
       }
 
       {error && <div className='error-container'><p>Ocurrió un error procesando su acción. Intente de nuevo.</p></div>}
+
+      <Footer />
 
     </div>
   );
