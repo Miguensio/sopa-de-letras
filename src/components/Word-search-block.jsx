@@ -10,6 +10,9 @@ const WordSearchBlock = ({ letter, indexPos, handleItemSelected }) => {
 			handleItemSelected(isSelected, setIsSelected, indexPos, letter, setNotFound);
 		}
 
+    useEffect(() => {
+      setIsSelected('no-selected')
+    }, [])
 
     useEffect(() => {
       if(isSelected === 'select-error'){
@@ -26,7 +29,7 @@ const WordSearchBlock = ({ letter, indexPos, handleItemSelected }) => {
     
         return () => clearTimeout(timer);
       }
-    }, [isSelected, setIsSelected]);
+    }, [isSelected]);
 
     return (
       <div className={`block ${isSelected} ${notFound}`} onClick={() => handleClick()}>

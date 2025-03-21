@@ -1,17 +1,24 @@
+import { useState } from 'react';
 import './start-game-styles.css';
 import useFetchWords from '../hooks/useFetchWordsearchWords';
 
-function StartGameMenu({ setShowWordsearch, setInputTheme, setWords, setColumns, setRows, setIsLoading, setError }){
+function StartGameMenu({ handleShowWordsearch, handleWordsearchInfo, handleIsLoading, handleError }){
+	const [theme, setTheme] = useState('')
 
 	const handleClickRandom = () => {
-		setIsLoading(true);
-		useFetchWords("aleatorio", setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading, setError);
+		handleShowWordsearch(false);
+		handleIsLoading(true);
+		useFetchWords("aleatorio", handleWordsearchInfo, handleShowWordsearch, handleIsLoading, handleError);
 	}
 
 	const handleClickTheme = () => {
-		setIsLoading(true);
-		const theme = document.getElementById("theme-input").value;
-		useFetchWords(theme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading, setError);
+		handleShowWordsearch(false);
+		handleIsLoading(true);
+		useFetchWords(theme, handleWordsearchInfo, handleShowWordsearch, handleIsLoading, handleError);
+	}
+
+	const handleInput = (e) => {
+		setTheme(e.target.value)
 	}
 
 	return(
@@ -19,7 +26,7 @@ function StartGameMenu({ setShowWordsearch, setInputTheme, setWords, setColumns,
 			<div className="start-menu-content">
 				<h2>Introduzca un tema para la sopa de letras...</h2>
 				<div className="input-container">
-					<input id="theme-input" type="text" placeholder="Introduzca un tema"/>
+					<input type="text" value={theme} onChange={handleInput} placeholder="Introduzca un tema"/>
 					<button onClick={handleClickTheme}>Generar</button>
 				</div>
 				<h2>O genere una sopa de letras de tema aleatorio.</h2>

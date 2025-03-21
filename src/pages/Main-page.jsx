@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import Navbar from '../components/Nav';
 import StartGameMenu from '../components/Start-Game-Menu';
@@ -7,21 +7,25 @@ import Footer from '../components/Footer';
 
 function Home(){
   const [showWordsearch, setShowWordsearch] = useState(false);
-  const [words, setWords] = useState([]);
-  const [columns, setColumns] = useState('');
-  const [rows, setRows] = useState('');
-  const [inputTheme, setInputTheme] = useState('');
+  const [wordsearchInfo, setWordsearchInfo] = useState({
+    words: [],
+    theme: null,
+    columns: null,
+    rows: null,
+  })
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const wordsearchRef = useRef(null)
+
   useEffect(() => {
-    if(words.length !== 0){
-      window.scrollBy({
-        top: window.innerHeight,
+    if(wordsearchInfo.words.length !== 0){
+      window.scrollTo({
+        top: wordsearchRef.current.offsetTop,
         behavior: 'smooth'
       });
     }
-  }, [words]);
+  }, [wordsearchInfo]);
 
   useEffect(() => {
     if(error !== null){
@@ -34,18 +38,36 @@ function Home(){
     }
   }, [error]);
 
+  const handleWordsearchInfo = (words, inputTheme, columns, rows) => {
+    setWordsearchInfo({
+      words: words,
+      theme: inputTheme,
+      columns: columns,
+      rows: rows
+    })
+  }
+
+  const handleShowWordsearch = (bool) => {
+    setShowWordsearch(bool)
+  }
+
+  const handleIsLoading = (bool) => {
+    setIsLoading(bool)
+  }
+
+  const handleError = (errorMessage) => {
+    setError(errorMessage)
+  }
+
   return (
     <div className='page-container'>
       <Navbar />
 
       <StartGameMenu 
-      setShowWordsearch={setShowWordsearch}
-      setInputTheme={setInputTheme}
-      setWords={setWords}
-      setColumns={setColumns}
-      setRows={setRows} 
-      setIsLoading={setIsLoading}
-      setError={setError} />
+      handleShowWordsearch={handleShowWordsearch}
+      handleWordsearchInfo={handleWordsearchInfo} 
+      handleIsLoading={handleIsLoading}
+      handleError={handleError} />
 
       {isLoading &&
         <div className='loading'>
@@ -54,12 +76,9 @@ function Home(){
       }
 
       {showWordsearch &&
-      <main className="game-container">
+      <main ref={wordsearchRef} className="game-container">
         <WordSearchGrid 
-        theme={inputTheme}
-        words={words}
-        columns={columns}
-        rows={rows} />
+        wordsearchInfo={wordsearchInfo} />
       </main>
       }
 

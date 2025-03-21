@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-
-async function useFetchWords(wordsearchTheme, setInputTheme, setWords, setColumns, setRows, setShowWordsearch, setIsLoading, setError){
+function useFetchWords(wordsearchTheme, handleWordsearchInfo, handleShowWordsearch, handleIsLoading, handleError){
 
     const apiKey = "AIzaSyBxayQluPAL1WF547ILMXsC77qFJpbEFDQ";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -22,42 +20,23 @@ async function useFetchWords(wordsearchTheme, setInputTheme, setWords, setColumn
     })
     .then(response => response.json())
     .then(data => {
-        if(data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text) {
-            let jsonString = data.candidates[0].content.parts[0].text;
+        let jsonString = data.candidates[0].content.parts[0].text;
 
-            jsonString = jsonString.replace(/```json\s*/, '');
-            jsonString = jsonString.replace(/```\s*$/, '');
+        jsonString = jsonString.replace(/```json\s*/, '');
+        jsonString = jsonString.replace(/```\s*$/, '');
 
-            try {
-                const jsonResponse = JSON.parse(jsonString);
-                console.log(jsonResponse);
+        const jsonResponse = JSON.parse(jsonString);
 
-                setInputTheme(jsonResponse.theme);
-                setWords(jsonResponse.words);
-                setColumns(jsonResponse.columns);
-                setRows(jsonResponse.rows);
-                setShowWordsearch(true);
+        handleWordsearchInfo(jsonResponse.words, jsonResponse.theme, jsonResponse.columns, jsonResponse.rows)
 
-                setIsLoading(false);
-                setError(null);
-
-            } 
-            catch (error) {
-                console.error("Error al parsear la respuesta JSON:", error);
-                setError('Error con la respuesta del servidor');
-                setIsLoading(false);
-            }
-        } 
-        else{
-            console.log("No se pudo obtener la respuesta esperada");
-            setError('Ocurrió un error con su input, intente de nuevo');
-            setIsLoading(false);
-        }
+        handleShowWordsearch(true);
+        handleIsLoading(false);
+        handleError(null);
     })
     .catch(error => {
         console.log("Error de la API", error);
-        setError("Ocurrió un error procesando su acción. Intente de nuevo.");
-        setIsLoading(false);
+        handleError("Ocurrió un error procesando su acción. Intente de nuevo.");
+        handleIsLoading(false);
     })
 }
 

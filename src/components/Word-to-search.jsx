@@ -6,6 +6,11 @@ function WordToSearch({ word, handleFoundWord }){
   const [isFound, setIsFound] = useState(false);
 
   useEffect(() => {
+    setWordFound('')
+    setIsFound(false)
+  }, [])
+
+  useEffect(() => {
     if(wordFound === 'no-match'){
       const timer = setTimeout(() => {
         setWordFound('fade-out');

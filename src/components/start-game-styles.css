@@ -20,13 +20,12 @@
     height: max-content;
     background-color: rgba(22, 22, 22, 0.7);
     border-radius: 30px;
-    outline: 2px solid white;
 }
 
 .start-menu-content h2{
     margin: 30px 0;
     padding: 5px 10px;
-    font-size: 2rem;
+    font-size: 1.6rem;
     text-align: center;
     background-color: rgb(71, 71, 71, 0);
 }
@@ -67,8 +66,7 @@
     border-radius: 10px;
     background-color: rgb(45, 45, 45);
     color: rgb(216, 216, 216);
-    font-weight: 900;
-    font-size: 1rem;
+    font-size: 1.2rem;
     cursor: pointer;
 }
 
@@ -94,8 +92,7 @@
     border-radius: 10px;
     background-color: rgb(45, 45, 45);
     color: rgb(211, 211, 211);
-    font-weight: 900;
-    font-size: 1rem;
+    font-size: 1.2rem;
     cursor: pointer;
 }
 
@@ -109,7 +106,7 @@
 
     .start-menu-content h2{
         margin: 30px 0;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 
     .input-container{
