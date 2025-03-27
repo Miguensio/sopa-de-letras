@@ -4,7 +4,7 @@ import WordToSearch from './Word-to-search';
 
 const WordSearchGrid = ({ wordsearchInfo }) => {
 
-  const { words, theme, columns, rows } = wordsearchInfo
+  let { words, theme, columns, rows } = wordsearchInfo
 
   let itemSelected = false;
   let foundWords = 0;
@@ -341,7 +341,7 @@ const WordSearchGrid = ({ wordsearchInfo }) => {
     }
   }
 
-  const createGameArray = (words) => {
+  const createGameArray = () => {
     const gameArray = new Array(size);
     gameArray.fill('0');
     let count = 0;
@@ -429,7 +429,7 @@ const WordSearchGrid = ({ wordsearchInfo }) => {
       }
 
       if(count > 50){
-        toBeDeleted.push(i);
+        toBeDeleted.push(words[i]);
         count = 0;
         i++;
         continue;
@@ -440,10 +440,8 @@ const WordSearchGrid = ({ wordsearchInfo }) => {
 
     }
 
-    if(toBeDeleted.length > 0){
-      for(let i = 0; i < toBeDeleted.length; i++){
-        words.splice(toBeDeleted[i])
-      }
+    if (toBeDeleted.length > 0) {
+      words = words.filter((word) => !toBeDeleted.includes(word));
     }
 
     return gameArray;
@@ -485,11 +483,12 @@ const WordSearchGrid = ({ wordsearchInfo }) => {
       }
 
       wordLetters.sort();
-      selectedLetters.sort();
+      let selectedLettersCompare = [...selectedLetters];
+      selectedLettersCompare.sort()
 
-      if(wordLetters.length === selectedLetters.length){
+      if(wordLetters.length === selectedLettersCompare.length){
         for(let i = 0; i < wordLetters.length; i++){
-          if(!(wordLetters[i] === selectedLetters[i])){
+          if(!(wordLetters[i] === selectedLettersCompare[i])){
             foundWord = false;
             break;
           }
@@ -542,14 +541,6 @@ const WordSearchGrid = ({ wordsearchInfo }) => {
     }
     return gameArray;
   }
-
-  const size = rows * columns;
-
-  let gameArray = createGameArray(words);
-
-  gameArray = addLetters(gameArray, letters);
-
-  let gameArrayChunks = chunkArray(gameArray, columns);
 
   const handleSelection = (propState, setPropState, index, letter, setNotFound) => {
     //If no item is selected yet the prop state is changed and the index is saved
@@ -776,9 +767,16 @@ const WordSearchGrid = ({ wordsearchInfo }) => {
         direction = '';
         firstClickedIndex = clickedIndexes[0];
       }
-
     }
   }
+
+  const size = rows * columns;
+
+  let gameArray = createGameArray();
+
+  gameArray = addLetters(gameArray, letters);
+
+  let gameArrayChunks = chunkArray(gameArray, columns);
 
   return (
     <>
